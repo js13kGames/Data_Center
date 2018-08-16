@@ -100,3 +100,14 @@ div.port.power div.hole {
 div.hole.selected {
     box-shadow: 0 0 5px 5px white;
 }
+
+div#cables div {
+    background-color: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    transition-duration: 5s;
+}
+
+div#cables div:hover {
+    background-color: white;
+    transition-duration: 0s;
+}

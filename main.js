@@ -76,22 +76,18 @@ var maxStock = {
 var shopStock = {}
 
 var rack = [
-    {
-        name: "PS-0",
-        ports: [],
-    },
-    {
-        name: "ROUTER",
-        ports: [],
-    },
-    {
-        name: "SW-4",
-        ports: [],
-    },
-    {
-        name: "SR-200",
-        ports: [],
-    }
+    "PS-0",
+    "ROUTER",
+    "SW-4",
+    "SR-200",
+]
+
+var cables = [
+    [[0, 0], [1, 18]],
+    [[0, 1], [2, 18]],
+    [[0, 2], [3, 18]],
+    [[1, 0], [2, 17]],
+    [[2, 0], [3, 17]],
 ]
 
 function restock() {
@@ -155,8 +151,8 @@ function renderShop() {
 function renderRack() {
     rackDiv.innerHTML = ""
 
-    for (const item of rack) {
-        var machine = machines[item.name]
+    for (const name of rack) {
+        var machine = machines[name]
         var portLayout = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "power"]
         switch (machine.type) {
         case "server":
@@ -184,7 +180,7 @@ function renderRack() {
         machineDiv.classList.add("machine", machine.type)
         var nameDiv = document.createElement("div")
         nameDiv.className = "name"
-        nameDiv.innerHTML = item.name
+        nameDiv.innerHTML = name
         machineDiv.appendChild(nameDiv)
         for (const port of portLayout) {
             if (port === "") {
@@ -202,6 +198,19 @@ function renderRack() {
     }
 }
 
+function renderCables() {
+    document.getElementById("cables").innerHTML = ""
+    for (var cable of cables) {
+        var from = cable[0]
+        var to = cable[1]
+
+        var fromHole = document.getElementById("rack").children[from[0]].children[from[1]+1].children[0]
+        var toHole = document.getElementById("rack").children[to[0]].children[to[1]+1].children[0]
+
+        connect(fromHole, toHole, "rgba(255, 255, 255, 0.2)", 6)
+    }
+}
+
 /* COMPLETE HACK DO NOT TOUCH */
 function connect(div1, div2, color, thickness) {
     var off1 = getOffset(div1)
@@ -214,8 +223,8 @@ function connect(div1, div2, color, thickness) {
     var cx = ((x1 + x2) / 2) - (length / 2)
     var cy = ((y1 + y2) / 2) - (thickness / 2)
     var angle = Math.atan2((y1-y2),(x1-x2))*(180/Math.PI)
-    var htmlLine = "<div style='padding:0px; margin:0px; height:" + thickness + "px; background-color:" + color + "; line-height:1px; position:absolute; left:" + cx + "px; top:" + cy + "px; width:" + length + "px; -moz-transform:rotate(" + angle + "deg); -webkit-transform:rotate(" + angle + "deg); -o-transform:rotate(" + angle + "deg); -ms-transform:rotate(" + angle + "deg); transform:rotate(" + angle + "deg);' />"
-    document.body.innerHTML += htmlLine;
+    var htmlLine = "<div style='padding:0px; margin:0px; height:" + thickness + "px; line-height:1px; position:absolute; left:" + cx + "px; top:" + cy + "px; width:" + length + "px; -moz-transform:rotate(" + angle + "deg); -webkit-transform:rotate(" + angle + "deg); -o-transform:rotate(" + angle + "deg); -ms-transform:rotate(" + angle + "deg); transform:rotate(" + angle + "deg);' />"
+    document.getElementById("cables").innerHTML += htmlLine;
 }
 
 function getOffset(el) {
@@ -231,6 +240,7 @@ function getOffset(el) {
 function render() {
     renderShop()
     renderRack()
+    renderCables()
 }
 
 restock()
