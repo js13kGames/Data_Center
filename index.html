@@ -1,97 +1,20 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <script src="main.js"></script>
         <link rel="stylesheet" href="styles.css">
     </head>
     <body>
         <div class="left">
             <div class="stats">
-                <h1>untitled game</h1>
+                <h1>offline — the game</h1>
                 <p>balance: £<span id="balance">1000</span></p>
                 <p>traffic: <span id="traffic">53</span>/day</p>
                 <p>up-time: <span id="uptime">103</span> hours</p>
             </div>
             
-            <div class="shop">
-                <div class="shop-item">
-                    <h1>SR-200, 3 left, £180</h1>
-                    <p>180W</p>
-                    <p>4-core 2.1Ghz</p>
-                    <p>8GB RAM</p>
-                    <p>1x 256GB storage</p>
-                </div>
-                <div class="shop-item">
-                    <h1>SR-210, 1 left, £370</h1>
-                    <p>230W</p>
-                    <p>6-core 2.9Ghz</p>
-                    <p>12GB RAM</p>
-                    <p>2x 1024GB storage</p>
-                </div>
-                <div class="shop-item">
-                    <h1>SW-16, 2 left, £130</h1>
-                    <p>90W</p>
-                    <p>16 ethernet ports</p>
-                </div>
-            </div>
+            <div class="shop" id="shop"></div>
         </div>
-        <div class="rack" id="rack">
-            <div class="machine switch">
-                <div class="name"><span>SW-16</span></div>
-                <div class="net port">
-                    <div class="hole"></div>
-                </div>
-                <div class="net port">
-                    <div class="hole"></div>
-                </div>
-                <div class="net port">
-                    <div class="hole"></div>
-                </div>
-                <div class="net port">
-                    <div class="hole"></div>
-                </div>
-                <div class="net port">
-                    <div class="hole selected"></div>
-                </div>
-                <div class="net port">
-                    <div class="hole"></div>
-                </div>
-                <div class="net port">
-                    <div class="hole"></div>
-                </div>
-                <div class="net port">
-                    <div class="hole"></div>
-                </div>
-                <div class="net port">
-                    <div class="hole"></div>
-                </div>
-                <div class="net port">
-                    <div class="hole"></div>
-                </div>
-                <div class="net port">
-                    <div class="hole"></div>
-                </div>
-                <div class="net port">
-                    <div class="hole"></div>
-                </div>
-                <div class="net port">
-                    <div class="hole"></div>
-                </div>
-                <div class="net port">
-                    <div class="hole"></div>
-                </div>
-                <div class="net port">
-                    <div class="hole"></div>
-                </div>
-                <div class="net port">
-                    <div class="hole"></div>
-                </div>
-                <div></div>
-                <div></div>
-                <div class="power port">
-                    <div class="hole"></div>
-                </div>
-            </div>
-        </div>
+        <div class="rack" id="rack"></div>
     </body>
+    <script src="main.js"></script>
 </html>
