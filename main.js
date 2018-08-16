@@ -2,6 +2,7 @@ var shopDiv = document.getElementById("shop")
 var rackDiv = document.getElementById("rack")
 
 var rackSpace = 4
+var selectedPort = null
 
 window.setInterval(() => {
     restock()
@@ -151,7 +152,8 @@ function renderShop() {
 function renderRack() {
     rackDiv.innerHTML = ""
 
-    for (const name of rack) {
+    for (var m = 0; m < rack.length; m++) {
+        const name = rack[m]
         var machine = machines[name]
         var portLayout = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "power"]
         switch (machine.type) {
@@ -182,20 +184,65 @@ function renderRack() {
         nameDiv.className = "name"
         nameDiv.innerHTML = name
         machineDiv.appendChild(nameDiv)
-        for (const port of portLayout) {
+        for (var j = 0; j < portLayout.length; j++) {
+            const port = portLayout[j]
             if (port === "") {
                 machineDiv.appendChild(document.createElement("div"))
                 continue
             }
+
             var portDiv = document.createElement("div")
             portDiv.classList.add(port, "port")
+            const machineNumber = m
+            const portNumber = j
+
             var holeDiv = document.createElement("div")
             holeDiv.className = "hole"
             portDiv.appendChild(holeDiv)
             machineDiv.appendChild(portDiv)
+
+            holeDiv.onclick = () => clickPort(machineNumber, portNumber)
         }
         rackDiv.appendChild(machineDiv)
     }
+}
+
+function clickPort(machineIndex, portIndex) {
+    if (selectedPort === null) {
+        selectedPort = [machineIndex, portIndex]
+        getPortHoleDiv(machineIndex, portIndex).classList.add("selected")
+        return
+    }
+
+    var selectedType = getPortDiv(selectedPort[0], selectedPort[1]).classList[0]
+    var clickedType = getPortDiv(machineIndex, portIndex).classList[0]
+
+    if (selectedPort[0] === machineIndex) {
+        alert("Why would you even want to connect a machine to itself?")
+        getPortHoleDiv(selectedPort[0], selectedPort[1]).classList.remove("selected")
+        selectedPort = null
+        return
+    }
+
+    if (selectedType !== clickedType) {
+        alert("Can only connect ports of the same type")
+        getPortHoleDiv(selectedPort[0], selectedPort[1]).classList.remove("selected")
+        selectedPort = null
+        return
+    }
+
+    cables.push([selectedPort, [machineIndex, portIndex]])
+    renderCables()
+    getPortHoleDiv(selectedPort[0], selectedPort[1]).classList.remove("selected")
+    selectedPort = null
+}
+
+function getPortDiv(machineIndex, portIndex) {
+    return document.getElementById("rack").children[machineIndex].children[portIndex+1]
+}
+
+function getPortHoleDiv(machineIndex, portIndex) {
+    return getPortDiv(machineIndex, portIndex).children[0]
 }
 
 function renderCables() {
@@ -204,8 +251,8 @@ function renderCables() {
         var from = cable[0]
         var to = cable[1]
 
-        var fromHole = document.getElementById("rack").children[from[0]].children[from[1]+1].children[0]
-        var toHole = document.getElementById("rack").children[to[0]].children[to[1]+1].children[0]
+        var fromHole = getPortHoleDiv(from[0], from[1])
+        var toHole = getPortHoleDiv(to[0], to[1])
 
         connect(fromHole, toHole)
     }
