@@ -3,11 +3,14 @@ var rackDiv = document.getElementById("rack")
 
 var rackSpace = 4
 var selectedPort = null
+var balance = 500
+var traffic = 50
+var uptime = 0
+var secondsPerDay = 60
+var trafficCap = 0
 
-window.setInterval(() => {
-    restock()
-    renderShop()
-}, 1000 * 30)
+window.setInterval(elapseDay, 1000 * secondsPerDay)
+window.setInterval(elapseHour, (1000 * secondsPerDay)/24)
 
 var machines = {
     "SR-200": {
@@ -83,13 +86,24 @@ var rack = [
     "SR-200",
 ]
 
-var cables = [
-    [[0, 0], [1, 18]],
-    [[0, 1], [2, 18]],
-    [[0, 2], [3, 18]],
-    [[1, 0], [2, 17]],
-    [[2, 0], [3, 17]],
-]
+var cables = []
+
+function elapseHour() {
+    uptime++
+    moneyGained = traffic / (48 + (Math.random() - 0.5) * 8)
+    balance += moneyGained
+    document.getElementById("cash-per-hour").innerHTML = moneyGained.toFixed(2)
+    renderStats()
+}
+
+function elapseDay() {
+    restock()
+    render()
+    traffic = Math.min(
+        Math.round((traffic + Math.round(Math.random() * 20)) * (Math.random() * 0.4 + 0.9)),
+        calculateTrafficCap(),
+    )
+}
 
 function restock() {
     for (const name in maxStock) {
@@ -102,6 +116,21 @@ function restock() {
             }
         }
     }
+}
+
+function calculateTrafficCap() {
+    var cores = 0
+    var ram = 0
+
+    rack.forEach(name => {
+        var machine = machines[name]
+        if (machine.type === "server") {
+            cores += machine.cores
+            ram += machine.ram
+        }
+    })
+
+    return cores*50 + ram*8
 }
 
 function renderShop() {
@@ -207,6 +236,13 @@ function renderRack() {
     }
 }
 
+function renderStats() {
+    document.getElementById("balance").innerHTML = balance.toFixed(2)
+    document.getElementById("traffic").innerHTML = traffic
+    document.getElementById("uptime").innerHTML = (uptime / 24).toFixed(1)
+    document.getElementById("traffic-cap").innerHTML = calculateTrafficCap()
+}
+
 function clickPort(machineIndex, portIndex) {
     if (selectedPort === null) {
         selectedPort = [machineIndex, portIndex]
@@ -231,10 +267,31 @@ function clickPort(machineIndex, portIndex) {
         return
     }
 
+    if (portIsConnected(selectedPort) || portIsConnected([machineIndex, portIndex])) {
+        alert("Only one cable can be attached to a port!")
+        getPortHoleDiv(selectedPort[0], selectedPort[1]).classList.remove("selected")
+        selectedPort = null
+        return
+    }
+
     cables.push([selectedPort, [machineIndex, portIndex]])
     renderCables()
     getPortHoleDiv(selectedPort[0], selectedPort[1]).classList.remove("selected")
     selectedPort = null
+}
+
+function portIsConnected(port) {
+    function eq(a, b) {
+        return a[0] == b[0] && a[1] == b[1]
+    }
+
+    for (var cable of cables) {
+        if (eq(cable[0], port) || eq(cable[1], port)) {
+            return true
+        }
+    }
+
+    return false
 }
 
 function getPortDiv(machineIndex, portIndex) {
@@ -258,14 +315,13 @@ function renderCables() {
     }
 }
 
-/* COMPLETE HACK DO NOT TOUCH */
 function connect(div1, div2) {
     var off1 = getOffset(div1)
     var off2 = getOffset(div2)
-    var x1 = off1.left + off1.width/2 - 200 /* WHY DOES IT HAVE TO BE THESE NUMBERS??? */
-    var y1 = off1.top + off1.height/2 - 92
-    var x2 = off2.left + off2.width/2 - 200
-    var y2 = off2.top + off2.height/2 - 92
+    var x1 = off1.left + off1.width/2
+    var y1 = off1.top + off1.height/2
+    var x2 = off2.left + off2.width/2
+    var y2 = off2.top + off2.height/2
     var length = Math.sqrt(((x2-x1) * (x2-x1)) + ((y2-y1) * (y2-y1)))
     var cx = ((x1 + x2) / 2) - (length / 2)
     var cy = ((y1 + y2) / 2) - 3
@@ -288,6 +344,7 @@ function render() {
     renderShop()
     renderRack()
     renderCables()
+    renderStats()
 }
 
 restock()

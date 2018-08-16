@@ -16,12 +16,12 @@ h1 {
 body {
     width: 1000px;
     height: 800px;
-    position: absolute;
+    /* position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-    margin: auto;
+    margin: auto; */
     display: grid;
     grid-template-columns: 400px 600px;
 }
@@ -29,11 +29,20 @@ body {
 div.left {
     padding-right: 20px;
     display: grid;
-    grid-template-rows: 200px auto;
+    grid-template-rows: 300px auto;
+}
+
+div.stats p {
+    margin-bottom: 5px;
+    margin-top: 0;
+}
+
+div.stats .grey {
+    color: grey;
 }
 
 div.shop {
-    height: 600px;
+    height: 500px;
     border: 2px solid white;
     overflow-y: scroll;
 }
@@ -56,7 +65,6 @@ div.shop-item p {
 
 div.rack {
     border: 2px solid white;
-    overflow-y: auto;
     padding: 10px;
 }
 
@@ -103,8 +111,8 @@ div.hole.selected {
 }
 
 div#cables div {
-    background-color: rgba(255, 255, 255, 0.2);
     cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.2);
     transition-duration: 0.5s;
 }
 
