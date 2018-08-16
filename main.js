@@ -207,12 +207,12 @@ function renderCables() {
         var fromHole = document.getElementById("rack").children[from[0]].children[from[1]+1].children[0]
         var toHole = document.getElementById("rack").children[to[0]].children[to[1]+1].children[0]
 
-        connect(fromHole, toHole, "rgba(255, 255, 255, 0.2)", 6)
+        connect(fromHole, toHole)
     }
 }
 
 /* COMPLETE HACK DO NOT TOUCH */
-function connect(div1, div2, color, thickness) {
+function connect(div1, div2) {
     var off1 = getOffset(div1)
     var off2 = getOffset(div2)
     var x1 = off1.left + off1.width/2 - 200 /* WHY DOES IT HAVE TO BE THESE NUMBERS??? */
@@ -221,9 +221,9 @@ function connect(div1, div2, color, thickness) {
     var y2 = off2.top + off2.height/2 - 92
     var length = Math.sqrt(((x2-x1) * (x2-x1)) + ((y2-y1) * (y2-y1)))
     var cx = ((x1 + x2) / 2) - (length / 2)
-    var cy = ((y1 + y2) / 2) - (thickness / 2)
+    var cy = ((y1 + y2) / 2) - 3
     var angle = Math.atan2((y1-y2),(x1-x2))*(180/Math.PI)
-    var htmlLine = "<div style='padding:0px; margin:0px; height:" + thickness + "px; line-height:1px; position:absolute; left:" + cx + "px; top:" + cy + "px; width:" + length + "px; -moz-transform:rotate(" + angle + "deg); -webkit-transform:rotate(" + angle + "deg); -o-transform:rotate(" + angle + "deg); -ms-transform:rotate(" + angle + "deg); transform:rotate(" + angle + "deg);' />"
+    var htmlLine = "<div style='padding:0px; margin:0px; height:" + 6 + "px; line-height:1px; position:absolute; left:" + cx + "px; top:" + cy + "px; width:" + length + "px; -moz-transform:rotate(" + angle + "deg); -webkit-transform:rotate(" + angle + "deg); -o-transform:rotate(" + angle + "deg); -ms-transform:rotate(" + angle + "deg); transform:rotate(" + angle + "deg);' />"
     document.getElementById("cables").innerHTML += htmlLine;
 }
 
