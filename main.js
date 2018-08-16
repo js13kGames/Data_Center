@@ -4,7 +4,7 @@ var rackDiv = document.getElementById("rack")
 var rackSpace = 4
 var selectedPort = null
 var balance = 500
-var traffic = 50
+var traffic = 0
 var uptime = 0
 var secondsPerDay = 60
 var trafficCap = 0
@@ -93,16 +93,16 @@ function elapseHour() {
     moneyGained = traffic / (48 + (Math.random() - 0.5) * 8)
     balance += moneyGained
     document.getElementById("cash-per-hour").innerHTML = moneyGained.toFixed(2)
+    traffic = Math.min(
+        Math.round((traffic + Math.round(Math.random() * 20/24)) * (Math.random() * 0.3 + 0.9)),
+        calculateTrafficCap(),
+    )
     renderStats()
 }
 
 function elapseDay() {
     restock()
     render()
-    traffic = Math.min(
-        Math.round((traffic + Math.round(Math.random() * 20)) * (Math.random() * 0.4 + 0.9)),
-        calculateTrafficCap(),
-    )
 }
 
 function restock() {
@@ -122,9 +122,9 @@ function calculateTrafficCap() {
     var cores = 0
     var ram = 0
 
-    rack.forEach(name => {
+    rack.forEach((name, index) => {
         var machine = machines[name]
-        if (machine.type === "server") {
+        if (machine.type === "server" && machineIsConnected("power", index) && machineIsConnected("net", index)) {
             cores += machine.cores
             ram += machine.ram
         }
@@ -196,9 +196,8 @@ function renderRack() {
             portLayout[17] = "net"
             break
         case "psu":
-            portLayout[18] = ""
             for (var i = 0; i < machine.ports; i++) {
-                portLayout[i] = "power"
+                portLayout[18-i] = "power"
             }
             break
         case "router":
@@ -276,22 +275,65 @@ function clickPort(machineIndex, portIndex) {
 
     cables.push([selectedPort, [machineIndex, portIndex]])
     renderCables()
+    renderStats()
     getPortHoleDiv(selectedPort[0], selectedPort[1]).classList.remove("selected")
     selectedPort = null
 }
 
 function portIsConnected(port) {
+    return getConnectedCable(port) !== null
+}
+
+// first element of cable is always the port
+function getConnectedCable(port) {
     function eq(a, b) {
         return a[0] == b[0] && a[1] == b[1]
     }
 
     for (var cable of cables) {
-        if (eq(cable[0], port) || eq(cable[1], port)) {
-            return true
+        if (eq(cable[0], port)) {
+            return cable
+        }
+        if (eq(cable[1], port)) {
+            // we need to flip the cable round
+            return [cable[1], cable[0]]
         }
     }
 
-    return false
+    return null
+}
+
+// kind is "power" or "net"
+// index is the machine index in the rack
+function machineIsConnected(kind, index) {
+    var machine = machines[rack[index]]
+
+    var inputIndex = inputPortIndex(kind, machine.type)
+    if (machine.type == "psu") {
+        return kind == "power"
+    } else if (machine.type == "router" && kind == "net") {
+        return machineIsConnected("power", index)
+    }
+
+    var cable = getConnectedCable([index, inputIndex])
+    if (cable === null) {
+        return false
+    }
+
+    return machineIsConnected(kind, cable[1][0])
+}
+
+// type is the type of a machine, such as "server"
+function inputPortIndex(port, type) {
+    switch (type) {
+    case "server":
+    case "switch":
+        return port == "net" ? 17 : 18
+    case "router":
+        return port == "net" ? null : 18 // no net input
+    case "psu":
+        return null // no inputs
+    }
 }
 
 function getPortDiv(machineIndex, portIndex) {
@@ -347,5 +389,4 @@ function render() {
     renderStats()
 }
 
-restock()
-render()
+elapseDay()
