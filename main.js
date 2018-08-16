@@ -202,10 +202,11 @@ function renderRack() {
     }
 }
 
+/* COMPLETE HACK DO NOT TOUCH */
 function connect(div1, div2, color, thickness) {
     var off1 = getOffset(div1)
     var off2 = getOffset(div2)
-    var x1 = off1.left + off1.width/2 - 200
+    var x1 = off1.left + off1.width/2 - 200 /* WHY DOES IT HAVE TO BE THESE NUMBERS??? */
     var y1 = off1.top + off1.height/2 - 92
     var x2 = off2.left + off2.width/2 - 200
     var y2 = off2.top + off2.height/2 - 92
