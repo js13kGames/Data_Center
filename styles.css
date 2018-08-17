@@ -50,17 +50,28 @@ div.shop {
 div.shop-item {
     border-bottom: 2px solid white;
     color: grey;
-    padding: 5px;
+    padding: 10px;
 }
 
 div.shop-item h1 {
     margin-top: 0;
+    margin-bottom: 0;
     font-size: 12pt;
     color: white;
 }
 
 div.shop-item p {
     margin: 0;
+}
+
+div.shop-item button {
+    background: none;
+    color: white;
+    border: none;
+    padding: 0;
+    margin-bottom: 5px;
+    cursor: pointer;
+    text-decoration: underline;
 }
 
 div.rack {

@@ -94,7 +94,7 @@ function elapseHour() {
     balance += moneyGained
     document.getElementById("cash-per-hour").innerHTML = moneyGained.toFixed(2)
     traffic = Math.min(
-        Math.round((traffic + Math.round(Math.random() * 20/24)) * (Math.random() * 0.3 + 0.9)),
+        Math.round((traffic + Math.round(Math.random() * 2.5)) * (Math.random() * 0.15 + 0.9)),
         calculateTrafficCap(),
     )
     renderStats()
@@ -133,13 +133,31 @@ function calculateTrafficCap() {
     return cores*50 + ram*8
 }
 
+function buyMachine(name) {
+    var machine = machines[name]
+    if (machine.price > balance) {
+        alert(`You need ${machine.price} to buy a ${name}, but you only have ${balance}`)
+        return
+    }
+
+    if (shopStock[name] <= 0) {
+        alert(`There are no ${name}s left in stock. New stock arrives every day`)
+        return
+    }
+
+    shopStock[name]--
+    balance -= machine.price
+    rack.push(name)
+    render()
+}
+
 function renderShop() {
     shopDiv.innerHTML = ""
 
     for (const name in shopStock) {
         if (shopStock.hasOwnProperty(name)) {
             machine = machines[name]
-            title = `${name}, ${shopStock[name]} left, £${machine.price}`
+            title = `${name}, ${shopStock[name]} left`
             lines = []
             switch (machine.type) {
             case "server":
@@ -168,6 +186,11 @@ function renderShop() {
             titleElem = document.createElement("h1")
             titleElem.innerHTML = title
             elem.appendChild(titleElem)
+            var buy = document.createElement("button")
+            buy.innerHTML = `buy for £${machine.price}`
+            const machineName = name
+            buy.onclick = () => buyMachine(machineName)
+            elem.appendChild(buy)
             lines.forEach(line => {
                 pelem = document.createElement("p")
                 pelem.innerHTML = line
@@ -196,8 +219,9 @@ function renderRack() {
             portLayout[17] = "net"
             break
         case "psu":
+            portLayout[18] = ""
             for (var i = 0; i < machine.ports; i++) {
-                portLayout[18-i] = "power"
+                portLayout[18-i-1] = "power"
             }
             break
         case "router":
