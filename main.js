@@ -63,7 +63,7 @@ var machines = {
         type: "router",
         price: 0,
         power: 0,
-        ports: 8,
+        ports: 4,
     }
 
     // Possible other machines: monitor, storage, tpu, crypto-miner, ups
