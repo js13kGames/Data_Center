@@ -41,6 +41,12 @@ div.stats .grey {
     color: grey;
 }
 
+canvas#graph {
+    border: 2px solid white;
+    width: 380px;
+    height: 40px;
+}
+
 div.shop {
     height: 500px;
     border: 2px solid white;

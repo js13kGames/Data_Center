@@ -5,6 +5,7 @@ var rackSpace = 4
 var selectedPort = null
 var balance = 500
 var traffic = 0
+var trafficHistory = [0]
 var uptime = 0
 var secondsPerDay = 60
 var trafficCap = 0
@@ -97,7 +98,12 @@ function elapseHour() {
         Math.round((traffic + Math.round(Math.random() * 2.5)) * (Math.random() * 0.15 + 0.9)),
         calculateTrafficCap(),
     )
+    trafficHistory.unshift(traffic)
+    if (trafficHistory.length > 76) {
+        trafficHistory.pop()
+    }
     renderStats()
+    renderGraph()
 }
 
 function elapseDay() {
@@ -378,6 +384,25 @@ function renderCables() {
         var toHole = getPortHoleDiv(to[0], to[1])
 
         connect(fromHole, toHole)
+    }
+}
+
+function renderGraph() {
+    var canvas = document.getElementById("graph")
+    var ctx = canvas.getContext("2d")
+    canvas.width = canvas.width
+
+    var x = canvas.width
+    var max = Math.max(...trafficHistory)
+    if (max == 0) {
+        return
+    }
+
+    ctx.fillStyle = "lime"
+    for (var t of trafficHistory) {
+        var height = (t/max) * canvas.height * 0.9
+        x -= 5
+        ctx.fillRect(x, canvas.height, 3, -height)
     }
 }
 
