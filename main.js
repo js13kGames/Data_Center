@@ -213,26 +213,26 @@ function renderRack() {
     for (var m = 0; m < rack.length; m++) {
         const name = rack[m]
         var machine = machines[name]
-        var portLayout = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "power"]
+        var portLayout = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], ["power", "in"]]
         switch (machine.type) {
         case "server":
-            portLayout[17] = "net"
+            portLayout[17] = ["net", "in"]
             break
         case "switch":
             for (var i = 0; i < machine.ports; i++) {
-                portLayout[i] = "net"
+                portLayout[i] = ["net", "out"]
             }
-            portLayout[17] = "net"
+            portLayout[17] = ["net", "in"]
             break
         case "psu":
             portLayout[18] = ""
             for (var i = 0; i < machine.ports; i++) {
-                portLayout[18-i-1] = "power"
+                portLayout[18-i-1] = ["power", "out"]
             }
             break
         case "router":
             for (var i = 0; i < machine.ports; i++) {
-                portLayout[i] = "net"
+                portLayout[i] = ["net", "out"]
             }
             break
         }
@@ -244,13 +244,13 @@ function renderRack() {
         machineDiv.appendChild(nameDiv)
         for (var j = 0; j < portLayout.length; j++) {
             const port = portLayout[j]
-            if (port === "") {
+            if (port.length === 0) {
                 machineDiv.appendChild(document.createElement("div"))
                 continue
             }
 
             var portDiv = document.createElement("div")
-            portDiv.classList.add(port, "port")
+            portDiv.classList.add(...port, "port")
             const machineNumber = m
             const portNumber = j
 
