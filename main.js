@@ -335,7 +335,11 @@ function getConnectedCable(port) {
 
 // kind is "power" or "net"
 // index is the machine index in the rack
-function machineIsConnected(kind, index) {
+function machineIsConnected(kind, index, checked=[]) {
+    if (checked.indexOf(index) >= 0) {
+        return false
+    }
+
     var machine = machines[rack[index]]
 
     var inputIndex = inputPortIndex(kind, machine.type)
@@ -350,7 +354,7 @@ function machineIsConnected(kind, index) {
         return false
     }
 
-    return machineIsConnected(kind, cable[1][0])
+    return machineIsConnected(kind, cable[1][0], Array.concat(checked, [index]))
 }
 
 // type is the type of a machine, such as "server"
