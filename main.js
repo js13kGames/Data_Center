@@ -99,7 +99,7 @@ function elapseHour() {
         calculateTrafficCap(),
     )
     trafficHistory.unshift(traffic)
-    if (trafficHistory.length > 76) {
+    if (trafficHistory.length > 128) {
         trafficHistory.pop()
     }
     renderStats()
@@ -401,8 +401,8 @@ function renderGraph() {
     ctx.fillStyle = "lime"
     for (var t of trafficHistory) {
         var height = (t/max) * canvas.height * 0.9
-        x -= 5
-        ctx.fillRect(x, canvas.height, 3, -height)
+        x -= 3
+        ctx.fillRect(x, canvas.height, 2, -height)
     }
 }
 
