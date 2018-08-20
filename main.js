@@ -81,10 +81,7 @@ var maxStock = {
 var shopStock = {}
 
 var rack = [
-    "PS-0",
     "ROUTER",
-    "SW-4",
-    "SR-200",
 ]
 
 var cables = []
