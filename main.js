@@ -226,9 +226,8 @@ function renderRack() {
             portLayout[17] = ["net", "in"]
             break
         case "psu":
-            portLayout[18] = ""
             for (var i = 0; i < machine.ports; i++) {
-                portLayout[18-i-1] = ["power", "out"]
+                portLayout[18-i] = ["power", "out"]
             }
             break
         case "router":
@@ -436,6 +435,44 @@ function getOffset(el) {
     }
 }
 
+function setHelp(title, body) {
+    document.getElementById("help").style.display = "block"
+    document.getElementById("help-title").innerHTML = title
+    document.getElementById("help-body").innerHTML = body.split("\n").join("<br>")
+}
+
+function hideHelp() {
+    document.getElementById("help").style.display = "none"
+}
+
+function showOverviewHelp() {
+    setHelp(
+        "Gameplay Overview",
+        `Offline is a game about managing a server network. What is your server running? <em>Who knows?</em> It will consist of different <em>machines</em>, such as servers, switches, PSUs, etc...
+        
+        At the top left is the stats section. It shows information about your game, such as your balance or total uptime. There is also a nice bar chart showing your traffic as a function of time.
+        
+        Below the stats is the shop. It lists all available machines you can buy, along with their specs and price. There is only a certain amount of each in stock, but new stock comes in every day (${secondsPerDay} real-time seconds.) The name of a machine indicates what it does: SR- means a server, SW- is a switch, and PS- is a power supply.
+        
+        The middle of the screen is the most interesting part of the game. It's your server rack, and is where all your machines will go. The coloured squares are ports. Orange is a power port, and purple is an ethernet port. Generally, the ports on the left are outputs and on the right are inputs (except for PSUs - outputs are on the right.) By clicking on two ports you can connect them. For a machine to work, it needs a cable from another working machine to each of its inputs.
+        
+        On the right, what you are reading right now, is the help section. Performing certain actions around the game will trigger helpful messages. You can dismiss this message by pressing "ok" below. Or, for some help on getting started, click "getting started help".
+        
+        <button onclick="showStartingHelp()">getting started help</button>`
+    )
+}
+
+function showStartingHelp() {
+    setHelp(
+        "Getting Started",
+        `Since you're reading this, chances are you haven't done anything yet. Thus, you only have a router in your server rack at the moment. For your network to do anything, you will need at least a router, power supply, and server. Go over to the shop at the left-hand-side of the page and buy an SR-200 server and a PS-0 power supply.
+        
+        With these in your rack, you can connect everything up and starting accumulating traffic. Your server needs both power and internet access. First, you'll want to connect your server to the power supply by clicking on one of your PS-0's orange ports and then clicking on the orange port on the SR-200. A faint line should appear, connecting the two ports - that's called a cable. The router will also need power, so draw a cable between another PS-0 port and the orange port on the router. Now all you need to do is connect one of the router's purple ports to the SR-200's purple port, which will give it ethernet access (recall orange ports are power and purple ports are ethernet).
+        
+        Now if you look over to the stats section on the left, you will see that the maximum traffic you can support has grown. This will mean that your daily traffic will begin to grow. If you wait a few seconds you will see your traffic increasing!`
+    )
+}
+
 function render() {
     renderShop()
     renderRack()
@@ -444,3 +481,4 @@ function render() {
 }
 
 elapseDay()
+showOverviewHelp()

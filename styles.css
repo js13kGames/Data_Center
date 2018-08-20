@@ -24,22 +24,29 @@ h1 {
 }
 
 body {
-    width: 1000px;
+    width: 1600px;
     height: 800px;
-    /* position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: auto; */
     display: grid;
-    grid-template-columns: 400px 600px;
+    grid-template-columns: 400px 600px 600px;
 }
 
 div.left {
     padding-right: 20px;
     display: grid;
     grid-template-rows: 300px auto;
+}
+
+div.right {
+    padding-left: 20px;
+    overflow-y: auto;
+}
+
+div.right * {
+    color: rgb(163, 163, 163);
+}
+
+div.right p, div.right p *, div.right button {
+    font-size: 11pt;
 }
 
 div.stats p {
@@ -80,7 +87,7 @@ div.shop-item p {
     margin: 0;
 }
 
-div.shop-item button {
+button {
     background: none;
     color: white;
     border: none;
