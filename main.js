@@ -159,6 +159,10 @@ function renderShop() {
 
     for (const name in shopStock) {
         if (shopStock.hasOwnProperty(name)) {
+            if (shopStock[name] === 0) {
+                continue
+            }
+
             machine = machines[name]
             title = `${name}, ${shopStock[name]} left`
             lines = []
