@@ -4,6 +4,16 @@
     font-size: 12pt;
 }
 
+*::selection {
+    background-color: lime;
+    color: black;
+}
+
+*::-moz-selection {
+    background-color: lime;
+    color: black;
+}
+
 html {
     background-color: black;
     color: white;
