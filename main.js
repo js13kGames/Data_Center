@@ -435,6 +435,32 @@ function getOffset(el) {
     }
 }
 
+function showAlert(message, buttons) {
+    document.getElementById("alert-curtain").style.display = "block"
+    var alertDiv = document.getElementById("alert")
+    alertDiv.innerHTML = ""
+    alertDiv.style.display = "block"
+
+    var p = document.createElement("p")
+    p.innerHTML = message.split("\n").join("<br>")
+    alertDiv.appendChild(p)
+
+    var footer = document.createElement("footer")
+    alertDiv.appendChild(footer)
+
+    for (var button of buttons) {
+        var btn = document.createElement("button")
+        btn.innerHTML = button.text
+        btn.onclick = button.onclick
+        footer.appendChild(btn)
+    }
+}
+
+function dismissAlert() {
+    document.getElementById("alert").style.display = "none"
+    document.getElementById("alert-curtain").style.display = "none"
+}
+
 function setHelp(title, body) {
     document.getElementById("help").style.display = "block"
     document.getElementById("help-title").innerHTML = title
@@ -482,3 +508,5 @@ function render() {
 
 elapseDay()
 showOverviewHelp()
+
+dismissAlert()
