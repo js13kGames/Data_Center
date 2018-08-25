@@ -9,6 +9,7 @@ var trafficHistory = [0]
 var uptime = 0
 var secondsPerDay = 60
 var trafficCap = 0
+var kwhCost = 0.5
 
 window.setInterval(elapseDay, 1000 * secondsPerDay)
 window.setInterval(elapseHour, (1000 * secondsPerDay)/24)
@@ -55,7 +56,7 @@ var machines = {
     "PS-0": {
         type: "psu",
         price: 40,
-        power: 250,
+        power: 15,
         ports: 6,
     },
 
@@ -89,8 +90,12 @@ var cables = []
 function elapseHour() {
     uptime++
     moneyGained = traffic / (48 + (Math.random() - 0.5) * 8)
+    moneyLost = calculatePowerUsage() * kwhCost
     balance += moneyGained
+    balance -= moneyLost
     document.getElementById("cash-per-hour").innerHTML = moneyGained.toFixed(2)
+    document.getElementById("loss-per-hour").innerHTML = moneyLost.toFixed(2)
+    
     traffic = Math.min(
         Math.round((traffic + Math.round(Math.random() * 2.5)) * (Math.random() * 0.15 + 0.9)),
         calculateTrafficCap(),
@@ -99,6 +104,7 @@ function elapseHour() {
     if (trafficHistory.length > 128) {
         trafficHistory.pop()
     }
+
     renderStats()
     renderGraph()
 }
@@ -154,6 +160,19 @@ function buyMachine(name) {
     render()
 }
 
+// Assumed to be called every game-hour
+function calculatePowerUsage() {
+    return this.rack.reduce((total, name, i) => {
+        if (!machineIsConnected("power", i)) {
+            return total
+        }
+
+        var machine = machines[name]
+        var kwh = machine.power / 1000
+        return total + kwh
+    }, 0)
+}
+
 function renderShop() {
     shopDiv.innerHTML = ""
 
@@ -183,7 +202,7 @@ function renderShop() {
                 break
             case "psu":
                 lines = [
-                    `supplies ${machine.power}W on each port`,
+                    `consumes ${machine.power}W`,
                     `${machine.ports} ports`,
                 ]
                 break
