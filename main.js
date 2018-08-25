@@ -259,7 +259,6 @@ function renderRack() {
         var machineDiv = document.createElement("div")
         machineDiv.classList.add("machine", name)
         machineDiv.onclick = evt => {
-            console.log(evt.target)
             if (!evt.target.classList.contains("hole"))
                 serverOptionsAlert(machineNumber)
         }
