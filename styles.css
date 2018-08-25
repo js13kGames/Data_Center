@@ -112,6 +112,7 @@ div.machine {
 
 div.machine div {
     padding: 5px;
+    pointer-events: none;
 }
 
 div.machine div.port {
@@ -119,6 +120,7 @@ div.machine div.port {
 }
 
 div.machine div.hole {
+    pointer-events: all;
     position: absolute;
     left: 0;
     right: 0;
@@ -169,7 +171,7 @@ div#alert-curtain {
 
 div#alert {
     width: 500px;
-    height: 400px;
+    height: 200px;
     border: 2px solid white;
     background-color: black;
     position: absolute;
