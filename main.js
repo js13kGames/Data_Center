@@ -213,6 +213,7 @@ function renderRack() {
 
     for (var m = 0; m < rack.length; m++) {
         const name = rack[m]
+        const machineNumber = m
         var machine = machines[name]
         var portLayout = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], ["power", "in"]]
         switch (machine.type) {
@@ -237,11 +238,18 @@ function renderRack() {
             break
         }
         var machineDiv = document.createElement("div")
-        machineDiv.classList.add("machine", machine.type)
+        machineDiv.classList.add("machine", name)
+        machineDiv.onclick = evt => {
+            console.log(evt.target)
+            if (!evt.target.classList.contains("hole"))
+                serverOptionsAlert(machineNumber)
+        }
+
         var nameDiv = document.createElement("div")
         nameDiv.className = "name"
         nameDiv.innerHTML = name
         machineDiv.appendChild(nameDiv)
+
         for (var j = 0; j < portLayout.length; j++) {
             const port = portLayout[j]
             if (port.length === 0) {
@@ -251,7 +259,6 @@ function renderRack() {
 
             var portDiv = document.createElement("div")
             portDiv.classList.add(...port, "port")
-            const machineNumber = m
             const portNumber = j
 
             var holeDiv = document.createElement("div")
@@ -435,6 +442,64 @@ function getOffset(el) {
     }
 }
 
+function serverOptionsAlert(index) {
+    var name = rack[index]
+
+    showAlert(
+        `You've selected the ${name} in rack index ${index}. Use the buttons below to do things to it.`,
+        [
+            {
+                text: "Cancel",
+            },
+            {
+                text: "Move up",
+                onclick: () => moveMachine(index, -1),
+            },
+            {
+                text: "Move down",
+                onclick: () => moveMachine(index, +1),
+            },
+            {
+                text: "Sell",
+                onclick: () => sellMachine(index),
+            },
+        ],
+    )
+}
+
+function moveMachine(index, dir) {
+    dismissAlert()
+    if (index < 0 || index+dir < 0 || index >= rack.length || index+dir >= rack.length) {
+        showAlert(`Cannot move the machine because it is already at the ${dir == 1 ? "bottom" : "top"}.`, [{text: "Cancel"}])
+        return
+    }
+
+    var temp = rack[index+dir]
+    rack[index+dir] = rack[index]
+    rack[index] = temp
+
+    render()
+}
+
+function sellMachine(index) {
+    dismissAlert()
+    
+    var name = rack[index]
+
+    if (name == "ROUTER") {
+        showAlert("You can't sell your router, because you wouldn't be able to buy another one!", [{text: "Cancel"}])
+        return
+    }
+
+    var machine = machines[name]
+    var sellPrice = machine.price * 0.8
+    rack.splice(index, 1)
+    balance += sellPrice
+    shopStock[name]++
+
+    render()
+}
+
 function showAlert(message, buttons) {
     document.getElementById("alert-curtain").style.display = "block"
     var alertDiv = document.getElementById("alert")
@@ -451,7 +516,7 @@ function showAlert(message, buttons) {
     for (var button of buttons) {
         var btn = document.createElement("button")
         btn.innerHTML = button.text
-        btn.onclick = button.onclick
+        btn.onclick = button.text == "Cancel" ? dismissAlert : button.onclick
         footer.appendChild(btn)
     }
 }
