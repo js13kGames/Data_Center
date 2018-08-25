@@ -578,7 +578,9 @@ function showStartingHelp() {
         
         With these in your rack, you can connect everything up and starting accumulating traffic. Your server needs both power and internet access. First, you'll want to connect your server to the power supply by clicking on one of your PS-0's orange ports and then clicking on the orange port on the SR-200. A faint line should appear, connecting the two ports - that's called a cable. The router will also need power, so draw a cable between another PS-0 port and the orange port on the router. Now all you need to do is connect one of the router's purple ports to the SR-200's purple port, which will give it ethernet access (recall orange ports are power and purple ports are ethernet).
         
-        Now if you look over to the stats section on the left, you will see that the maximum traffic you can support has grown. This will mean that your daily traffic will begin to grow. If you wait a few seconds you will see your traffic increasing!`
+        Now if you look over to the stats section on the left, you will see that the maximum traffic you can support has grown. This will mean that your daily traffic will begin to grow. If you wait a few seconds you will see your traffic increasing!
+        
+        Keep in mind, however, that the more machines you have running, the more you will have to spend on electricity. Electicity costs £${kwhCost.toFixed(2)} per kWh.`
     )
 }
 
