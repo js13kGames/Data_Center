@@ -10,6 +10,7 @@ var uptime = 0
 var secondsPerDay = 60
 var trafficCap = 0
 var kwhCost = 0.5
+var discovery = 4
 
 window.setInterval(elapseDay, 1000 * secondsPerDay)
 window.setInterval(elapseHour, (1000 * secondsPerDay)/24)
@@ -97,7 +98,7 @@ function elapseHour() {
     document.getElementById("loss-per-hour").innerHTML = moneyLost.toFixed(2)
     
     traffic = Math.min(
-        Math.round((traffic + Math.round(Math.random() * 2.5)) * (Math.random() * 0.15 + 0.9)),
+        traffic + Math.round((Math.round(Math.random() * discovery)) * (Math.random() * calculateRetention()) * (Math.random() - 0.1)),
         calculateTrafficCap(),
     )
     trafficHistory.unshift(traffic)
@@ -107,6 +108,16 @@ function elapseHour() {
 
     renderStats()
     renderGraph()
+}
+
+function calculateRetention() {
+    var totalClockSpeed = rack.reduce((total, name, index) => {
+        var machine = machines[name]
+        if (machine.type != "server" || !machineIsConnected("power", index) || !machineIsConnected("net", index)) return total
+        return machine.clock * machine.cores + total
+    }, 0)
+
+    return totalClockSpeed / 10
 }
 
 function elapseDay() {
@@ -519,6 +530,8 @@ function sellMachine(index) {
 }
 
 function showAlert(message, buttons) {
+    selectedPort = null
+    renderRack()
     document.getElementById("alert-curtain").style.display = "block"
     var alertDiv = document.getElementById("alert")
     alertDiv.innerHTML = ""
