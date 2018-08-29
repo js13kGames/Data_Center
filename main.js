@@ -1,7 +1,7 @@
 var shopDiv = document.getElementById("shop")
 var rackDiv = document.getElementById("rack")
 
-var rackSpace = 4
+var rackSpace = 15
 var selectedPort = null
 var balance = 500
 var traffic = 0
@@ -156,13 +156,17 @@ function calculateTrafficCap() {
 function buyMachine(name) {
     var machine = machines[name]
     if (machine.price > balance) {
-        alert(`You need ${machine.price} to buy a ${name}, but you only have ${balance}`)
+        showAlert(`You need ${machine.price} to buy a ${name}, but you only have ${balance}`, [{text: "Cancel"}])
         return
     }
 
     if (shopStock[name] <= 0) {
-        alert(`There are no ${name}s left in stock. New stock arrives every day`)
+        showAlert(`There are no ${name}s left in stock. New stock arrives every day`, [{text: "Cancel"}])
         return
+    }
+
+    if (rack.length + 1 >= rackSpace) {
+        showAlert(`You cannot have more than ${rackSpace} machines at one time. Sell one of your existing machines`, [{text: "Cancel"}])
     }
 
     shopStock[name]--
