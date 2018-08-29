@@ -98,7 +98,7 @@ function elapseHour() {
     document.getElementById("loss-per-hour").innerHTML = moneyLost.toFixed(2)
     
     traffic = Math.min(
-        traffic + Math.round((Math.round(Math.random() * discovery)) * (Math.random() * calculateRetention()) * (Math.random() - 0.1)),
+        traffic + Math.round((Math.round(Math.random() * discovery)) * (Math.random() * calculateRetention())),
         calculateTrafficCap(),
     )
     trafficHistory.unshift(traffic)
