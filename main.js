@@ -503,6 +503,12 @@ function moveMachine(index, dir) {
         return
     }
 
+    cables = cables.filter(c => {
+        return !(
+            c[0][0] === index || c[0][1] === index || c[1][0] === index || c[1][1] === index ||
+            c[0][0] === index+dir || c[0][1] === index+dir || c[1][0] === index+dir || c[1][1] === index+dir)
+    })
+
     var temp = rack[index+dir]
     rack[index+dir] = rack[index]
     rack[index] = temp
