@@ -150,7 +150,7 @@ function calculateTrafficCap() {
         }
     })
 
-    return cores*50 + ram*8
+    return cores*15 + ram*5
 }
 
 function buyMachine(name) {
