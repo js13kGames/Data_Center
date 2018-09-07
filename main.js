@@ -580,7 +580,7 @@ function hideHelp() {
 function showOverviewHelp() {
     setHelp(
         "Gameplay Overview",
-        `Offline is a game about managing a server network. What is your server running? <em>Who knows?</em> It will consist of different <em>machines</em>, such as servers, switches, PSUs, etc...
+        `data_center is a game about managing a server network. What is your server running? <em>Who knows?</em> It will consist of different <em>machines</em>, such as servers, switches, PSUs, etc...
         
         At the top left is the stats section. It shows information about your game, such as your balance or total uptime. There is also a nice bar chart showing your traffic as a function of time.
         
