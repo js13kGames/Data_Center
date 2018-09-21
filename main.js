@@ -394,7 +394,7 @@ function machineIsConnected(kind, index, checked=[]) {
         return false
     }
 
-    return machineIsConnected(kind, cable[1][0], Array.concat(checked, [index]))
+    return machineIsConnected(kind, cable[1][0], Array.prototype.concat(checked, [index]))
 }
 
 // type is the type of a machine, such as "server"
